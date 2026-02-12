@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Комаше | C# / C++ Developer</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+:root{
+    --bg:#080a0f;
+    --card:rgba(255,255,255,0.06);
+    --accent1:#3a86ff;
+    --accent2:#8338ec;
+    --text:#e6e6e6;
+    --muted:#9aa0a6;
+}
+body.light{
+    --bg:#0f172a;
+    --card:rgba(255,255,255,0.1);
+}
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",sans-serif;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);overflow-x:hidden;}
+
+/* PRELOADER */
+#preloader{
+    position:fixed;inset:0;background:#000;
+    display:flex;justify-content:center;align-items:center;
+    z-index:9999;
+}
+.loader{
+    width:60px;height:60px;
+    border:4px solid #333;
+    border-top:4px solid var(--accent1);
+    border-radius:50%;
+    animation:spin 1s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* BACKGROUND */
+canvas{position:fixed;top:0;left:0;z-index:-2;}
+#cursorGlow{
+    position:fixed;width:280px;height:280px;border-radius:50%;
+    pointer-events:none;
+    background:radial-gradient(circle,rgba(131,56,236,0.25),transparent 70%);
+    transform:translate(-50%,-50%);
+    z-index:-1;
+}
+
+/* HEADER */
+header{
+    padding:25px 10%;
+    display:flex;justify-content:space-between;align-items:center;
+    border-bottom:1px solid rgba(255,255,255,0.05);
+}
+nav a{
+    margin-left:25px;color:var(--muted);text-decoration:none;
+}
+nav a:hover{color:var(--text);}
+.theme-toggle{
+    margin-left:20px;padding:6px 12px;background:var(--card);
+    border-radius:8px;cursor:pointer;
+}
+
+/* HERO */
+.hero{text-align:center;padding:140px 10% 100px;}
+.hero h1{
+    font-size:64px;
+    background:linear-gradient(90deg,var(--accent1),var(--accent2),var(--accent1));
+    background-size:200%;
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    animation:gradient 4s linear infinite;
+}
+@keyframes gradient{to{background-position:200% center;}}
+
+section{padding:80px 10%;max-width:1200px;margin:auto;}
+.card{
+    background:var(--card);
+    padding:40px;border-radius:16px;
+    backdrop-filter:blur(20px);
+    border:1px solid rgba(255,255,255,0.08);
+    box-shadow:0 20px 60px rgba(0,0,0,0.6);
+    margin-top:30px;
+    transition:transform .3s;
+}
+.card:hover{transform:translateY(-6px);}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:25px;
+}
+
+.price{
+    font-size:22px;
+    color:var(--accent1);
+    margin-top:10px;
+}
+
+button{
+    margin-top:15px;
+    padding:8px 14px;
+    border:none;
+    border-radius:8px;
+    background:linear-gradient(90deg,var(--accent1),var(--accent2));
+    color:#fff;
+    cursor:pointer;
+}
+
+textarea{
+    width:100%;
+    height:160px;
+    margin-top:15px;
+    background:#111;
+    color:#ccc;
+    border:1px solid #333;
+    border-radius:8px;
+    padding:10px;
+}
+
+footer{text-align:center;padding:40px;color:var(--muted);margin-top:80px;}
+
+.music-btn{
+    position:fixed;
+    bottom:20px;
+    right:20px;
+    background:var(--card);
+    padding:10px 14px;
+    border-radius:50px;
+    cursor:pointer;
+    z-index:100;
+}
+</style>
+</head>
+
+<body>
+
+<div id="preloader"><div class="loader"></div></div>
+<div id="cursorGlow"></div>
+<canvas id="bg"></canvas>
+
+<header>
+    <div>Комаше</div>
+    <nav>
+        <a href="#about">Обо мне</a>
+        <a href="#projects">Проекты</a>
+        <a href="#pricing">Цены</a>
+        <a href="#stats">Статистика</a>
+        <a href="#contact">Контакты</a>
+        <span class="theme-toggle" onclick="toggleTheme()">Theme</span>
+    </nav>
+</header>
+
+<section class="hero">
+    <h1>Комаше</h1>
+    <h2>C# / C++ Developer</h2>
+</section>
+
+<section id="about">
+<div class="card">
+<h3>Обо мне</h3>
+<p>Разработка высоконагруженных систем, backend-архитектура, оптимизация и алгоритмы на C# и C++.</p>
+</div>
+</section>
+
+<section id="projects">
+<h2>Проекты</h2>
+<div class="grid">
+<div class="card">
+<h3>HighLoad API</h3>
+<p>Микросервисная архитектура на .NET, 50k+ RPS, Redis + PostgreSQL.</p>
+</div>
+<div class="card">
+<h3>Game Engine Module</h3>
+<p>Оптимизированный C++ модуль рендеринга, снижение latency на 37%.</p>
+</div>
+<div class="card">
+<h3>Trading Bot</h3>
+<p>Алгоритмический бот с асинхронной архитектурой и low-latency обработкой.</p>
+</div>
+</div>
+</section>
+
+<section id="pricing">
+<h2>Услуги и цены</h2>
+<div class="grid">
+<div class="card">
+<h3>Backend разработка</h3>
+<p>REST API, микросервисы, архитектура.</p>
+<div class="price">от $500</div>
+</div>
+<div class="card">
+<h3>C++ оптимизация</h3>
+<p>Low-level оптимизация, алгоритмы.</p>
+<div class="price">от $400</div>
+</div>
+<div class="card">
+<h3>Индивидуальный проект</h3>
+<p>Полный цикл разработки.</p>
+<div class="price">по договорённости</div>
+</div>
+</div>
+
+<div class="card">
+<h3>Шаблон для заказа</h3>
+<textarea id="orderText">
+Здравствуйте, Комаше.
+
+Описание проекта:
+—
+
+Сроки:
+—
+
+Бюджет:
+—
+
+Контакт для связи:
+—
+</textarea>
+<button onclick="copyText()">Скопировать шаблон</button>
+</div>
+</section>
+
+<section id="stats">
+<div class="card">
+<h3>WPM за год</h3>
+<canvas id="chart" height="120"></canvas>
+</div>
+</section>
+
+<section id="contact">
+<div class="card">
+<h3>Контакты</h3>
+<p>Email: koordinolog@gmail.com</p>
+<p>GitHub: github.com/shimakuro</p>
+<p>Telegram: @autoferanto</p>
+</div>
+</section>
+
+<footer>© 2026 Комаше</footer>
+
+<div class="music-btn" onclick="toggleMusic()">🎵 Музыка</div>
+<audio id="bgMusic" loop>
+<source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_7d6f7d1a4f.mp3?filename=deep-ambient-110397.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+window.onload=()=>document.getElementById("preloader").style.display="none";
+
+function toggleTheme(){document.body.classList.toggle("light");}
+
+function copyText(){
+    let text=document.getElementById("orderText");
+    text.select();
+    document.execCommand("copy");
+    alert("Шаблон скопирован");
+}
+
+function toggleMusic(){
+    let m=document.getElementById("bgMusic");
+    if(m.paused){m.play();}else{m.pause();}
+}
+
+/* Glow */
+const glow=document.getElementById("cursorGlow");
+document.addEventListener("mousemove",e=>{
+    glow.style.left=e.clientX+"px";
+    glow.style.top=e.clientY+"px";
+});
+
+/* Particles */
+const canvas=document.getElementById("bg");
+const ctx=canvas.getContext("2d");
+function resize(){canvas.width=innerWidth;canvas.height=innerHeight;}
+resize();addEventListener("resize",resize);
+
+class P{
+constructor(){
+this.x=Math.random()*canvas.width;
+this.y=Math.random()*canvas.height;
+this.vx=(Math.random()-0.5)*0.5;
+this.vy=(Math.random()-0.5)*0.5;
+}
+update(){
+this.x+=this.vx;this.y+=this.vy;
+if(this.x<0||this.x>canvas.width)this.vx*=-1;
+if(this.y<0||this.y>canvas.height)this.vy*=-1;
+}
+draw(){
+ctx.strokeStyle="rgba(255,255,255,0.4)";
+ctx.beginPath();
+ctx.moveTo(this.x-4,this.y);ctx.lineTo(this.x+4,this.y);
+ctx.moveTo(this.x,this.y-4);ctx.lineTo(this.x,this.y+4);
+ctx.stroke();
+}
+}
+let ps=[...Array(70)].map(()=>new P());
+(function animate(){
+ctx.clearRect(0,0,canvas.width,canvas.height);
+ps.forEach((a,i)=>{
+a.update();a.draw();
+for(let j=i+1;j<ps.length;j++){
+let dx=a.x-ps[j].x,dy=a.y-ps[j].y;
+let d=Math.hypot(dx,dy);
+if(d<120){
+ctx.strokeStyle=`rgba(131,56,236,${1-d/120})`;
+ctx.beginPath();
+ctx.moveTo(a.x,a.y);
+ctx.lineTo(ps[j].x,ps[j].y);
+ctx.stroke();
+}
+}
+});
+requestAnimationFrame(animate);
+})();
+
+/* Chart */
+document.addEventListener("DOMContentLoaded",()=>{
+const c=document.getElementById("chart").getContext("2d");
+new Chart(c,{
+type:"line",
+data:{
+labels:["Янв","Фев","Мар","Апр","Май","Июн","Июл","Авг","Сен","Окт","Ноя","Дек"],
+datasets:[{
+label:"WPM",
+data:[250,280,320,350,380,410,440,460,470,480,485,490],
+borderColor:"#8338ec",
+backgroundColor:"rgba(131,56,236,0.2)",
+tension:0.4,
+fill:true
+}]
+},
+options:{
+plugins:{legend:{labels:{color:"#e6e6e6"}}},
+scales:{
+x:{ticks:{color:"#9aa0a6"}},
+y:{min:250,max:500,ticks:{color:"#9aa0a6"}}
+}
+}
+});
+});
+</script>
+
+</body>
+</html>
